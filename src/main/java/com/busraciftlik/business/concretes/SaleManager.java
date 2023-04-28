@@ -40,20 +40,20 @@ public class SaleManager implements SaleService {
 
     @Override
     public CreateSaleResponse add(CreateSaleRequest request) {
-        Sale sale = mapper.map(request,Sale.class);
+        Sale sale = mapper.map(request, Sale.class);
         sale.setId(0);
-        Sale saveSale = repository.save(sale);
-       return mapper.map(saveSale,CreateSaleResponse.class);
+        Sale savedSale = repository.save(sale);
+        return mapper.map(savedSale, CreateSaleResponse.class);
 
     }
 
     @Override
     public UpdateSaleResponse update(int id, UpdateSaleRequest request) {
         checkIfIdExists(id);
-        Sale sale = mapper.map(request,Sale.class);
+        Sale sale = mapper.map(request, Sale.class);
         sale.setId(id);
         Sale saveSale = repository.save(sale);
-        return mapper.map(saveSale,UpdateSaleResponse.class);
+        return mapper.map(saveSale, UpdateSaleResponse.class);
 
     }
 
@@ -63,8 +63,8 @@ public class SaleManager implements SaleService {
         repository.deleteById(id);
     }
 
-    private void checkIfIdExists(int id){
-        if(!repository.existsById(id)){
+    private void checkIfIdExists(int id) {
+        if (!repository.existsById(id)) {
             throw new RuntimeException("id not found");
         }
     }
