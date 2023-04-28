@@ -58,5 +58,4 @@ public class CategoryManager implements CategoryService {
         categoryRepository.deleteById(id);
     }
 
-
 }

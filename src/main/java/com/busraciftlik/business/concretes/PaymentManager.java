@@ -7,6 +7,7 @@ import com.busraciftlik.business.dto.responses.create.CreatePaymentResponse;
 import com.busraciftlik.business.dto.responses.get.GetAllPaymentsResponse;
 import com.busraciftlik.business.dto.responses.get.GetPaymentResponse;
 import com.busraciftlik.business.dto.responses.update.UpdatePaymentResponse;
+import com.busraciftlik.business.rules.PaymentBusinessRules;
 import com.busraciftlik.entities.Payment;
 import com.busraciftlik.repository.abstracts.PaymentRepository;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 public class PaymentManager implements PaymentService {
     private final PaymentRepository repository;
     private final ModelMapper mapper;
+    private final PaymentBusinessRules rules;
 
     @Override
     public List<GetAllPaymentsResponse> getAll() {
@@ -32,7 +34,7 @@ public class PaymentManager implements PaymentService {
 
     @Override
     public GetPaymentResponse getById(int id) {
-        checkIfIdExists(id);
+        rules.checkIfIdExists(id);
         Payment payment = repository.findById(id).orElseThrow();
         return mapper.map(payment,GetPaymentResponse.class);
     }
@@ -47,7 +49,7 @@ public class PaymentManager implements PaymentService {
 
     @Override
     public UpdatePaymentResponse update(int id, UpdatePaymentRequest request) {
-        checkIfIdExists(id);
+        rules.checkIfIdExists(id);
         Payment payment = mapper.map(request,Payment.class);
         payment.setId(id);
         Payment savedPayment = repository.save(payment);
@@ -56,13 +58,9 @@ public class PaymentManager implements PaymentService {
 
     @Override
     public void delete(int id) {
-        checkIfIdExists(id);
+        rules.checkIfIdExists(id);
         repository.deleteById(id);
     }
 
-    private void checkIfIdExists(int id){
-        if(!repository.existsById(id)){
-            throw new RuntimeException("id not found");
-        }
-    }
+
 }
