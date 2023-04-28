@@ -28,11 +28,12 @@ public class ProductManager implements ProductService {
 
     @Override
     public List<GetAllProductsResponse> getAll(boolean includePassive) {
-        List<Product> products = includePassive ? productRepository.findAll() : productRepository.findAllByStatus(Status.ACTIVE);
+        List<Product> products = getActiveProduct(includePassive);
         List<GetAllProductsResponse> getAllProductsResponses = products
                 .stream().map(product -> modelMapper.map(product, GetAllProductsResponse.class)).toList();
         return getAllProductsResponses;
     }
+
 
     @Override
     public GetProductResponse getById(int id) {
@@ -77,6 +78,9 @@ public class ProductManager implements ProductService {
 
     //! Business rules
 
+    private List<Product> getActiveProduct(boolean includePassive) {
+        return includePassive ? productRepository.findAll() : productRepository.findAllByStatus(Status.ACTIVE);
+    }
     private void validateProduct(Product product) {
         checkIfUnitPriceValid(product);
         checkIfQuantityValid(product);
