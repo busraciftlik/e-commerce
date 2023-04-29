@@ -12,12 +12,14 @@ import com.busraciftlik.business.dto.responses.update.UpdateProductResponse;
 import com.busraciftlik.business.rules.ProductBusinessRules;
 import com.busraciftlik.entities.Category;
 import com.busraciftlik.entities.Product;
+import com.busraciftlik.entities.enums.Status;
 import com.busraciftlik.repository.abstracts.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -74,4 +76,9 @@ public class ProductManager implements ProductService {
         productRepository.deleteById(id);
     }
 
+    public void changeStatus(int productId, Status status){
+        Product product = productRepository.findById(productId).orElseThrow();
+        product.setStatus(status);
+        productRepository.save(product);
+    }
 }
