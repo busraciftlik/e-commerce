@@ -15,4 +15,5 @@ public interface SaleService {
     CreateSaleResponse add(CreateSaleRequest request);
     UpdateSaleResponse update(int id, UpdateSaleRequest request);
     void delete(int id);
+
 }

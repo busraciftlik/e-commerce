@@ -12,9 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductBusinessRules {
     private final ProductRepository repository;
-    public List<Product> getActiveProduct(boolean includePassive) {
-        return includePassive ? repository.findAll() : repository.findAllByStatus(Status.ACTIVE);
-    }
+
     public void validateProduct(Product product) {
         checkIfUnitPriceValid(product);
         checkIfQuantityValid(product);

@@ -19,7 +19,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +31,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public List<GetAllProductsResponse> getAll(boolean includePassive) {
-        List<Product> products = rules.getActiveProduct(includePassive);
+        List<Product> products = filterProductsByPassiveStatus(includePassive);
         return products
                 .stream().map(product -> modelMapper.map(product, GetAllProductsResponse.class))
                 .toList();
@@ -76,9 +75,14 @@ public class ProductManager implements ProductService {
         productRepository.deleteById(id);
     }
 
-    public void changeStatus(int productId, Status status){
+    @Override
+    public void changeStatus(int productId, Status status) {
         Product product = productRepository.findById(productId).orElseThrow();
         product.setStatus(status);
         productRepository.save(product);
+    }
+
+    private List<Product> filterProductsByPassiveStatus(boolean includePassive) {
+        return includePassive ? productRepository.findAll() : productRepository.findAllByStatus(Status.ACTIVE);
     }
 }
