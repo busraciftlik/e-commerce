@@ -66,6 +66,7 @@ public class ProductManager implements ProductService {
     public UpdateProductResponse update(int id, UpdateProductRequest updateProductRequest) {
         rules.checkIfProductExists(id);
         Product product = modelMapper.map(updateProductRequest, Product.class);
+        product.setId(id);
         rules.validateProduct(product);
         productRepository.save(product);
         return modelMapper.map(product, UpdateProductResponse.class);

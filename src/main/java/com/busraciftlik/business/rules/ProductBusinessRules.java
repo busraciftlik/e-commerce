@@ -1,5 +1,6 @@
 package com.busraciftlik.business.rules;
 
+import com.busraciftlik.core.exceptions.BusinessException;
 import com.busraciftlik.entities.Product;
 import com.busraciftlik.entities.enums.Status;
 import com.busraciftlik.repository.abstracts.ProductRepository;
@@ -15,7 +16,7 @@ public class ProductBusinessRules {
 
     public void checkIfProductExists(int id){
         if(!repository.existsById(id)){
-            throw new RuntimeException("Product not found");
+            throw new BusinessException("Product not found");
         }
     }
     public void validateProduct(Product product) {

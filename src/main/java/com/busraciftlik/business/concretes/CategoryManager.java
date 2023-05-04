@@ -50,6 +50,7 @@ public class CategoryManager implements CategoryService {
     public UpdateCategoryResponse update(int id, UpdateCategoryRequest updateCategoryRequest) {
         rules.checkIfCategoryExist(id);
         Category category = modelMapper.map(updateCategoryRequest, Category.class);
+        category.setId(id);
         Category persistedCategory = categoryRepository.save(category);
         return modelMapper.map(persistedCategory, UpdateCategoryResponse.class);
     }

@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProductRequest {
-    private int id;
+
     private List<Integer> categoryIds;
 
     @Size(min = 1 , max = 20)

@@ -1,5 +1,6 @@
 package com.busraciftlik.business.rules;
 
+import com.busraciftlik.core.exceptions.BusinessException;
 import com.busraciftlik.repository.abstracts.PaymentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ public class PaymentBusinessRules {
 
     public void checkIfPaymentExists(int id){
         if(!repository.existsById(id)){
-            throw new RuntimeException("Payment not found");
+            throw new BusinessException("Payment not found");
         }
     }
 }
