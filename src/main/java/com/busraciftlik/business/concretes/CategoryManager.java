@@ -7,6 +7,7 @@ import com.busraciftlik.business.dto.responses.create.CreateCategoryResponse;
 import com.busraciftlik.business.dto.responses.get.GetAllCategoriesResponse;
 import com.busraciftlik.business.dto.responses.get.GetCategoryResponse;
 import com.busraciftlik.business.dto.responses.update.UpdateCategoryResponse;
+import com.busraciftlik.business.rules.CategoryBusinessRules;
 import com.busraciftlik.entities.Category;
 import com.busraciftlik.repository.abstracts.CategoryRepository;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.List;
 public class CategoryManager implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
+    private final CategoryBusinessRules rules;
 
     @Override
     public List<GetAllCategoriesResponse> getAll() {
@@ -32,29 +34,29 @@ public class CategoryManager implements CategoryService {
 
     @Override
     public GetCategoryResponse getById(int id) {
+        rules.checkIfCategoryExist(id);
         Category category = categoryRepository.findById(id).orElseThrow();
-        GetCategoryResponse getCategoryResponse = modelMapper.map(category, GetCategoryResponse.class);
-        return getCategoryResponse;
+        return modelMapper.map(category, GetCategoryResponse.class);
     }
 
     @Override
     public CreateCategoryResponse add(CreateCategoryRequest createCategoryRequest) {
         Category category = modelMapper.map(createCategoryRequest, Category.class);
         Category persistedCategory = categoryRepository.save(category);
-        CreateCategoryResponse createCategoryResponse = modelMapper.map(persistedCategory, CreateCategoryResponse.class);
-        return createCategoryResponse;
+        return modelMapper.map(persistedCategory, CreateCategoryResponse.class);
     }
 
     @Override
     public UpdateCategoryResponse update(int id, UpdateCategoryRequest updateCategoryRequest) {
+        rules.checkIfCategoryExist(id);
         Category category = modelMapper.map(updateCategoryRequest, Category.class);
         Category persistedCategory = categoryRepository.save(category);
-        UpdateCategoryResponse updateCategoryResponse = modelMapper.map(persistedCategory, UpdateCategoryResponse.class);
-        return updateCategoryResponse;
+        return modelMapper.map(persistedCategory, UpdateCategoryResponse.class);
     }
 
     @Override
     public void delete(int id) {
+        rules.checkIfCategoryExist(id);
         categoryRepository.deleteById(id);
     }
 

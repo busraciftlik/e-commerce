@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 public class PaymentBusinessRules {
     private final PaymentRepository repository;
 
-    public void checkIfIdExists(int id){
+    public void checkIfPaymentExists(int id){
         if(!repository.existsById(id)){
-            throw new RuntimeException("id not found");
+            throw new RuntimeException("Payment not found");
         }
     }
 }

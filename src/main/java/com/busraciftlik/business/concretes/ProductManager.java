@@ -40,6 +40,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public GetProductResponse getById(int id) {
+        rules.checkIfProductExists(id);
         Product product = productRepository.findById(id).orElseThrow();
         return modelMapper.map(product, GetProductResponse.class);
     }
@@ -63,6 +64,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public UpdateProductResponse update(int id, UpdateProductRequest updateProductRequest) {
+        rules.checkIfProductExists(id);
         Product product = modelMapper.map(updateProductRequest, Product.class);
         rules.validateProduct(product);
         productRepository.save(product);
@@ -71,12 +73,13 @@ public class ProductManager implements ProductService {
 
     @Override
     public void delete(int id) {
-
+        rules.checkIfProductExists(id);
         productRepository.deleteById(id);
     }
 
     @Override
     public void changeStatus(int productId, Status status) {
+        rules.checkIfProductExists(productId);
         Product product = productRepository.findById(productId).orElseThrow();
         product.setStatus(status);
         productRepository.save(product);

@@ -13,6 +13,11 @@ import java.util.List;
 public class ProductBusinessRules {
     private final ProductRepository repository;
 
+    public void checkIfProductExists(int id){
+        if(!repository.existsById(id)){
+            throw new RuntimeException("Product not found");
+        }
+    }
     public void validateProduct(Product product) {
         checkIfUnitPriceValid(product);
         checkIfQuantityValid(product);

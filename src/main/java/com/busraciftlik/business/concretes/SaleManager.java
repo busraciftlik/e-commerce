@@ -7,6 +7,7 @@ import com.busraciftlik.business.dto.responses.create.CreateSaleResponse;
 import com.busraciftlik.business.dto.responses.get.GetAllSalesResponse;
 import com.busraciftlik.business.dto.responses.get.GetSaleResponse;
 import com.busraciftlik.business.dto.responses.update.UpdateSaleResponse;
+import com.busraciftlik.business.rules.SaleBusinessRules;
 import com.busraciftlik.entities.Sale;
 import com.busraciftlik.repository.abstracts.SaleRepository;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 public class SaleManager implements SaleService {
     private final SaleRepository repository;
     private final ModelMapper mapper;
+    private final SaleBusinessRules rules;
 
     @Override
     public List<GetAllSalesResponse> getAll() {
@@ -32,7 +34,7 @@ public class SaleManager implements SaleService {
 
     @Override
     public GetSaleResponse getById(int id) {
-        checkIfIdExists(id);
+        rules.checkIfSaleExists(id);
         Sale sale = repository.findById(id).orElseThrow();
 
         return mapper.map(sale, GetSaleResponse.class);
@@ -49,7 +51,7 @@ public class SaleManager implements SaleService {
 
     @Override
     public UpdateSaleResponse update(int id, UpdateSaleRequest request) {
-        checkIfIdExists(id);
+        rules.checkIfSaleExists(id);
         Sale sale = mapper.map(request, Sale.class);
         sale.setId(id);
         Sale saveSale = repository.save(sale);
@@ -59,13 +61,9 @@ public class SaleManager implements SaleService {
 
     @Override
     public void delete(int id) {
-        checkIfIdExists(id);
+        rules.checkIfSaleExists(id);
         repository.deleteById(id);
     }
 
-    private void checkIfIdExists(int id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("id not found");
-        }
-    }
+
 }

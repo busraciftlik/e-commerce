@@ -34,7 +34,7 @@ public class PaymentManager implements PaymentService {
 
     @Override
     public GetPaymentResponse getById(int id) {
-        rules.checkIfIdExists(id);
+        rules.checkIfPaymentExists(id);
         Payment payment = repository.findById(id).orElseThrow();
         return mapper.map(payment,GetPaymentResponse.class);
     }
@@ -49,7 +49,7 @@ public class PaymentManager implements PaymentService {
 
     @Override
     public UpdatePaymentResponse update(int id, UpdatePaymentRequest request) {
-        rules.checkIfIdExists(id);
+        rules.checkIfPaymentExists(id);
         Payment payment = mapper.map(request,Payment.class);
         payment.setId(id);
         Payment savedPayment = repository.save(payment);
@@ -58,7 +58,7 @@ public class PaymentManager implements PaymentService {
 
     @Override
     public void delete(int id) {
-        rules.checkIfIdExists(id);
+        rules.checkIfPaymentExists(id);
         repository.deleteById(id);
     }
 
