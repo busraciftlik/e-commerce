@@ -1,5 +1,6 @@
 package com.busraciftlik.business.rules;
 
+import com.busraciftlik.common.constants.Message;
 import com.busraciftlik.core.exceptions.BusinessException;
 import com.busraciftlik.repository.abstracts.SaleRepository;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ public class SaleBusinessRules {
 
     public void checkIfSaleExists(int id) {
         if (!repository.existsById(id)) {
-            throw new BusinessException("Sale not found");
+            throw new BusinessException(Message.Sale.NOT_EXISTS);
         }
     }
 }

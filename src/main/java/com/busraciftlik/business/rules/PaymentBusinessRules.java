@@ -1,5 +1,6 @@
 package com.busraciftlik.business.rules;
 
+import com.busraciftlik.common.constants.Message;
 import com.busraciftlik.core.exceptions.BusinessException;
 import com.busraciftlik.repository.abstracts.PaymentRepository;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ public class PaymentBusinessRules {
 
     public void checkIfPaymentExists(int id){
         if(!repository.existsById(id)){
-            throw new BusinessException("Payment not found");
+            throw new BusinessException(Message.Payment.NOT_FOUND);
         }
     }
 }
