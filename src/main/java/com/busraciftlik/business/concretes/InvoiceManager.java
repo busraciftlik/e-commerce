@@ -8,6 +8,7 @@ import com.busraciftlik.business.dto.responses.get.GetInvoiceResponse;
 import com.busraciftlik.business.dto.responses.update.UpdateInvoiceRequest;
 import com.busraciftlik.business.dto.responses.update.UpdateInvoiceResponse;
 import com.busraciftlik.business.rules.InvoiceBusinessRules;
+import com.busraciftlik.entities.Invoice;
 import com.busraciftlik.repository.abstracts.InvoiceRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -24,26 +25,46 @@ public class InvoiceManager implements InvoiceService {
 
     @Override
     public List<GetAllInvoicesResponse> getAll() {
-        return null;
+        List<Invoice> invoices = repository.findAll();
+        List<GetAllInvoicesResponse> responses = invoices
+                .stream()
+                .map(invoice -> mapper.map(invoice, GetAllInvoicesResponse.class))
+                .toList();
+
+        return responses;
     }
 
     @Override
     public GetInvoiceResponse getById(int id) {
-        return null;
+        rules.checkIfInvoiceExists(id);
+        Invoice invoice = repository.findById(id).orElseThrow();
+
+        return mapper.map(invoice, GetInvoiceResponse.class);
+
     }
 
     @Override
     public CreateInvoiceResponse add(CreateInvoiceRequest request) {
-        return null;
+        Invoice invoice = mapper.map(request, Invoice.class);
+        invoice.setId(0);
+        repository.save(invoice);
+
+        return mapper.map(invoice, CreateInvoiceResponse.class);
     }
 
     @Override
     public UpdateInvoiceResponse update(int id, UpdateInvoiceRequest request) {
-        return null;
+        rules.checkIfInvoiceExists(id);
+        Invoice invoice = mapper.map(request, Invoice.class);
+        invoice.setId(id);
+        repository.save(invoice);
+
+        return mapper.map(invoice, UpdateInvoiceResponse.class);
     }
 
     @Override
     public void delete(int id) {
-
+        rules.checkIfInvoiceExists(id);
+        repository.deleteById(id);
     }
 }

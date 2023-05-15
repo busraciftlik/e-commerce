@@ -18,4 +18,8 @@ public class Message {
     public static class Sale {
         public static final String NOT_EXISTS = "SALE_NOT_EXIST";
     }
+
+    public static class Invoice {
+        public static final String NOT_EXISTS = "INVOICE_NOT_EXISTS";
+    }
 }
