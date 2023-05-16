@@ -21,6 +21,6 @@ public class Payment {
     private int cardExpirationYear;
     private int cardExpirationMonth;
     private String cardCvv;
-    private String balance;
+    private double balance;
 
 }

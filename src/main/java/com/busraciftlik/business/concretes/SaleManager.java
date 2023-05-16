@@ -79,7 +79,7 @@ public class SaleManager implements SaleService {
 
     }
 
-    public void checkIfProductActive(Status status) {
+    private void checkIfProductActive(Status status) {
         if (!status.equals(Status.ACTIVE)) {
             throw new BusinessException(Message.Product.PRODUCT_NOT_ACTIVE);
         }

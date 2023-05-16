@@ -1,6 +1,8 @@
 package com.busraciftlik.business.concretes;
 
 import com.busraciftlik.business.abstracts.PaymentService;
+import com.busraciftlik.business.abstracts.PosService;
+import com.busraciftlik.business.dto.requests.CreateProductPaymentRequest;
 import com.busraciftlik.business.dto.requests.create.CreatePaymentRequest;
 import com.busraciftlik.business.dto.requests.update.UpdatePaymentRequest;
 import com.busraciftlik.business.dto.responses.create.CreatePaymentResponse;
@@ -21,6 +23,7 @@ import java.util.List;
 public class PaymentManager implements PaymentService {
     private final PaymentRepository repository;
     private final ModelMapper mapper;
+    private final PosService posService;
     private final PaymentBusinessRules rules;
 
     @Override
@@ -36,7 +39,7 @@ public class PaymentManager implements PaymentService {
     public GetPaymentResponse getById(int id) {
         rules.checkIfPaymentExists(id);
         Payment payment = repository.findById(id).orElseThrow();
-        return mapper.map(payment,GetPaymentResponse.class);
+        return mapper.map(payment, GetPaymentResponse.class);
     }
 
     @Override
@@ -44,16 +47,16 @@ public class PaymentManager implements PaymentService {
         Payment payment = mapper.map(request, Payment.class);
         payment.setId(0);
         Payment savedPayment = repository.save(payment);
-        return mapper.map(savedPayment,CreatePaymentResponse.class);
+        return mapper.map(savedPayment, CreatePaymentResponse.class);
     }
 
     @Override
     public UpdatePaymentResponse update(int id, UpdatePaymentRequest request) {
         rules.checkIfPaymentExists(id);
-        Payment payment = mapper.map(request,Payment.class);
+        Payment payment = mapper.map(request, Payment.class);
         payment.setId(id);
         Payment savedPayment = repository.save(payment);
-        return mapper.map(savedPayment,UpdatePaymentResponse.class);
+        return mapper.map(savedPayment, UpdatePaymentResponse.class);
     }
 
     @Override
@@ -62,5 +65,13 @@ public class PaymentManager implements PaymentService {
         repository.deleteById(id);
     }
 
-
+    @Override
+    public void processProductPayment(CreateProductPaymentRequest request) {
+        rules.checkIfPaymentIsValid(request);
+        Payment payment = repository.findByCardNumber(request.getCardNumber());
+        rules.checkIfBalanceEnough(payment.getBalance(), request.getPrice());
+        posService.pay();
+        payment.setBalance(payment.getBalance() - request.getPrice());
+        repository.save(payment);
+    }
 }

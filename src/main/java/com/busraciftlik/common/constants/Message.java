@@ -12,6 +12,9 @@ public class Message {
     public static class Payment {
         public static final String NOT_FOUND = "PAYMENT_NOT_FOUND";
         public static final String PAYMENT_FAILED = "PAYMENT_FAILED";
+        public static final String NOT_A_VALID_PAYMENT = "NOT_A_VALID_PAYMENT";
+        public static final String NOT_ENOUGH_MONEY = "NOT_ENOUGH_MONEY";
+
 
     }
 

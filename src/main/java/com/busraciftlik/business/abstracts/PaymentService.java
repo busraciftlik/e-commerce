@@ -1,6 +1,7 @@
 package com.busraciftlik.business.abstracts;
 
 
+import com.busraciftlik.business.dto.requests.CreateProductPaymentRequest;
 import com.busraciftlik.business.dto.requests.create.CreatePaymentRequest;
 import com.busraciftlik.business.dto.requests.update.UpdatePaymentRequest;
 import com.busraciftlik.business.dto.responses.create.CreatePaymentResponse;
@@ -17,5 +18,5 @@ public interface PaymentService {
     CreatePaymentResponse add(CreatePaymentRequest request);
     UpdatePaymentResponse update(int id, UpdatePaymentRequest request);
     void delete(int id);
-
+    void processProductPayment(CreateProductPaymentRequest request);
 }
