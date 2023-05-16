@@ -1,14 +1,20 @@
 package com.busraciftlik.business.concretes;
 
+import com.busraciftlik.business.abstracts.ProductService;
 import com.busraciftlik.business.abstracts.SaleService;
 import com.busraciftlik.business.dto.requests.create.CreateSaleRequest;
 import com.busraciftlik.business.dto.requests.update.UpdateSaleRequest;
 import com.busraciftlik.business.dto.responses.create.CreateSaleResponse;
 import com.busraciftlik.business.dto.responses.get.GetAllSalesResponse;
+import com.busraciftlik.business.dto.responses.get.GetProductResponse;
 import com.busraciftlik.business.dto.responses.get.GetSaleResponse;
 import com.busraciftlik.business.dto.responses.update.UpdateSaleResponse;
 import com.busraciftlik.business.rules.SaleBusinessRules;
+import com.busraciftlik.common.constants.Message;
+import com.busraciftlik.core.exceptions.BusinessException;
+import com.busraciftlik.entities.Product;
 import com.busraciftlik.entities.Sale;
+import com.busraciftlik.entities.enums.Status;
 import com.busraciftlik.repository.abstracts.SaleRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,6 +28,7 @@ public class SaleManager implements SaleService {
     private final SaleRepository repository;
     private final ModelMapper mapper;
     private final SaleBusinessRules rules;
+    private final ProductService productService;
 
     @Override
     public List<GetAllSalesResponse> getAll() {
@@ -42,6 +49,12 @@ public class SaleManager implements SaleService {
 
     @Override
     public CreateSaleResponse add(CreateSaleRequest request) {
+        List<Integer> productIds = request.getProductIds();
+        for (Integer productId : productIds) {
+            GetProductResponse byId = productService.getById(productId);
+            Product product = mapper.map(byId, Product.class);
+            checkIfProductActive(product.getStatus());
+        }
         Sale sale = mapper.map(request, Sale.class);
         sale.setId(0);
         Sale savedSale = repository.save(sale);
@@ -63,7 +76,12 @@ public class SaleManager implements SaleService {
     public void delete(int id) {
         rules.checkIfSaleExists(id);
         repository.deleteById(id);
+
     }
 
-
+    public void checkIfProductActive(Status status) {
+        if (!status.equals(Status.ACTIVE)) {
+            throw new BusinessException(Message.Product.PRODUCT_NOT_ACTIVE);
+        }
+    }
 }

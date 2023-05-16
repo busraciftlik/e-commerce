@@ -42,8 +42,9 @@ public class CategoryManager implements CategoryService {
     @Override
     public CreateCategoryResponse add(CreateCategoryRequest createCategoryRequest) {
         Category category = modelMapper.map(createCategoryRequest, Category.class);
-        Category persistedCategory = categoryRepository.save(category);
-        return modelMapper.map(persistedCategory, CreateCategoryResponse.class);
+        category.setId(0);
+        categoryRepository.save(category);
+        return modelMapper.map(category, CreateCategoryResponse.class);
     }
 
     @Override

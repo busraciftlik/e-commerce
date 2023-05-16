@@ -1,5 +1,6 @@
 package com.busraciftlik.business.dto.requests.create;
 
+import com.busraciftlik.entities.enums.Status;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -30,4 +31,6 @@ public class CreateProductRequest {
 
     @Size(max = 35)
     private String description;
+
+    private Status status;
 }

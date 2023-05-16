@@ -19,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -57,6 +58,7 @@ public class ProductManager implements ProductService {
                 product.getCategories().add(category);
             }
         }
+        product.setStatus(Status.ACTIVE);
         rules.validateProduct(product);
         productRepository.save(product);
         return modelMapper.map(product, CreateProductResponse.class);
