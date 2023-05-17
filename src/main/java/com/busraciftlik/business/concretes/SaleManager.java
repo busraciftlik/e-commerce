@@ -1,7 +1,9 @@
 package com.busraciftlik.business.concretes;
 
+import com.busraciftlik.business.abstracts.PaymentService;
 import com.busraciftlik.business.abstracts.ProductService;
 import com.busraciftlik.business.abstracts.SaleService;
+import com.busraciftlik.business.dto.requests.CreateProductPaymentRequest;
 import com.busraciftlik.business.dto.requests.create.CreateSaleRequest;
 import com.busraciftlik.business.dto.requests.update.UpdateSaleRequest;
 import com.busraciftlik.business.dto.responses.create.CreateSaleResponse;
@@ -29,6 +31,7 @@ public class SaleManager implements SaleService {
     private final ModelMapper mapper;
     private final SaleBusinessRules rules;
     private final ProductService productService;
+    private final PaymentService paymentService;
 
     @Override
     public List<GetAllSalesResponse> getAll() {
@@ -49,14 +52,16 @@ public class SaleManager implements SaleService {
 
     @Override
     public CreateSaleResponse add(CreateSaleRequest request) {
-        List<Integer> productIds = request.getProductIds();
-        for (Integer productId : productIds) {
-            GetProductResponse byId = productService.getById(productId);
-            Product product = mapper.map(byId, Product.class);
-            checkIfProductActive(product.getStatus());
-        }
+        checkIfProductActive(request);
         Sale sale = mapper.map(request, Sale.class);
         sale.setId(0);
+        sale.setTotalPrice(getTotalPrice(request.getProductIds()));
+
+        CreateProductPaymentRequest paymentRequest = new CreateProductPaymentRequest();
+        mapper.map(request,CreateProductPaymentRequest.class);
+        paymentRequest.setPrice(getTotalPrice(request.getProductIds()));
+        paymentService.processProductPayment(paymentRequest);
+
         Sale savedSale = repository.save(sale);
         return mapper.map(savedSale, CreateSaleResponse.class);
 
@@ -78,10 +83,24 @@ public class SaleManager implements SaleService {
         repository.deleteById(id);
 
     }
-
-    private void checkIfProductActive(Status status) {
-        if (!status.equals(Status.ACTIVE)) {
-            throw new BusinessException(Message.Product.PRODUCT_NOT_ACTIVE);
+    private void checkIfProductActive(CreateSaleRequest request) {
+        List<Integer> productIds = request.getProductIds();
+        for (Integer productId : productIds) {
+            GetProductResponse byId = productService.getById(productId);
+            Product product = mapper.map(byId, Product.class);
+            if (!product.getStatus().equals(Status.ACTIVE)) {
+                throw new BusinessException(Message.Product.PRODUCT_NOT_ACTIVE);
+            }
         }
+    }
+
+    private double getTotalPrice(List<Integer> productIds){
+        double totalPrice = 0;
+        for (Integer productId : productIds) {
+            Product product = mapper.map(productId, Product.class);
+            double price = product.getPrice();
+            totalPrice+=price;
+        }
+        return totalPrice;
     }
 }

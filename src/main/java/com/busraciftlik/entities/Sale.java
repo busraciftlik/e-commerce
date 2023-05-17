@@ -21,4 +21,6 @@ public class Sale {
     @OneToMany
     private Set<Product> products = new HashSet<>();
 
+    private double totalPrice;
+
 }

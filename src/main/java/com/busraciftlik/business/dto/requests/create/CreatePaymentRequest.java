@@ -3,11 +3,13 @@ package com.busraciftlik.business.dto.requests.create;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CreatePaymentRequest {
     @NotNull
     @NotBlank(message = "Card number cannot be left blank")

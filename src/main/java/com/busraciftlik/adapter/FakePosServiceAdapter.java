@@ -3,9 +3,11 @@ package com.busraciftlik.adapter;
 import com.busraciftlik.business.abstracts.PosService;
 import com.busraciftlik.common.constants.Message;
 import com.busraciftlik.core.exceptions.BusinessException;
+import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
+@Service
 public class FakePosServiceAdapter implements PosService {
 
     @Override
