@@ -1,5 +1,6 @@
 package com.busraciftlik.business.dto.requests.create;
 
+import com.busraciftlik.business.dto.requests.PaymentRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,5 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateSaleRequest {
     private List<Integer> productIds;
-    private double totalPrice;
+    private PaymentRequest paymentRequest;
+
 }

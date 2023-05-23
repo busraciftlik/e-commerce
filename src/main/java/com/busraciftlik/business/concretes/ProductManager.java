@@ -88,6 +88,17 @@ public class ProductManager implements ProductService {
         productRepository.save(product);
     }
 
+    public void changeQuantity(int productId){
+        Product product = productRepository.findById(productId).orElseThrow();
+        if(!((product.getQuantity()) < 0)) {
+            product.setQuantity(product.getQuantity() - 1);
+        }
+        if(!((product.getQuantity())  == 0)) {
+            changeStatus(productId,Status.PASSIVE);
+        }
+        productRepository.save(product);
+    }
+
     private List<Product> filterProductsByPassiveStatus(boolean includePassive) {
         return includePassive ? productRepository.findAll() : productRepository.findAllByStatus(Status.ACTIVE);
     }

@@ -1,6 +1,7 @@
 package com.busraciftlik.business.rules;
 
 import com.busraciftlik.business.dto.requests.CreateProductPaymentRequest;
+import com.busraciftlik.business.dto.requests.PaymentRequest;
 import com.busraciftlik.common.constants.Message;
 import com.busraciftlik.core.exceptions.BusinessException;
 import com.busraciftlik.repository.abstracts.PaymentRepository;

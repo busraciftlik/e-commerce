@@ -2,6 +2,8 @@ package com.busraciftlik.business.concretes;
 
 import com.busraciftlik.business.abstracts.PaymentService;
 import com.busraciftlik.business.abstracts.PosService;
+import com.busraciftlik.business.abstracts.ProductService;
+import com.busraciftlik.business.abstracts.SaleService;
 import com.busraciftlik.business.dto.requests.CreateProductPaymentRequest;
 import com.busraciftlik.business.dto.requests.create.CreatePaymentRequest;
 import com.busraciftlik.business.dto.requests.update.UpdatePaymentRequest;
@@ -11,6 +13,7 @@ import com.busraciftlik.business.dto.responses.get.GetPaymentResponse;
 import com.busraciftlik.business.dto.responses.update.UpdatePaymentResponse;
 import com.busraciftlik.business.rules.PaymentBusinessRules;
 import com.busraciftlik.entities.Payment;
+import com.busraciftlik.entities.Product;
 import com.busraciftlik.repository.abstracts.PaymentRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -69,9 +72,10 @@ public class PaymentManager implements PaymentService {
     public void processProductPayment(CreateProductPaymentRequest request) {
         rules.checkIfPaymentIsValid(request);
         Payment payment = repository.findByCardNumber(request.getCardNumber());
-        rules.checkIfBalanceEnough(payment.getBalance(), request.getPrice());
+        double price = request.getPrice();
+        rules.checkIfBalanceEnough(payment.getBalance(), price);
         posService.pay();
-        payment.setBalance(payment.getBalance() - request.getPrice());
+        payment.setBalance(payment.getBalance() - price);
         repository.save(payment);
     }
 }

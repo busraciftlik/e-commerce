@@ -55,17 +55,20 @@ public class SaleManager implements SaleService {
         checkIfProductActive(request);
         Sale sale = mapper.map(request, Sale.class);
         sale.setId(0);
+        List<Integer> productIds = request.getProductIds();
+        addProduct(sale, productIds);
         sale.setTotalPrice(getTotalPrice(request.getProductIds()));
-
-        CreateProductPaymentRequest paymentRequest = new CreateProductPaymentRequest();
-        mapper.map(request,CreateProductPaymentRequest.class);
-        paymentRequest.setPrice(getTotalPrice(request.getProductIds()));
-        paymentService.processProductPayment(paymentRequest);
+        getPayment(request, productIds);
 
         Sale savedSale = repository.save(sale);
-        return mapper.map(savedSale, CreateSaleResponse.class);
 
+        for (Integer productId : productIds) {
+            productService.changeQuantity(productId);
+        }
+
+        return mapper.map(savedSale, CreateSaleResponse.class);
     }
+
 
     @Override
     public UpdateSaleResponse update(int id, UpdateSaleRequest request) {
@@ -83,6 +86,35 @@ public class SaleManager implements SaleService {
         repository.deleteById(id);
 
     }
+
+    private void addProduct(Sale sale, List<Integer> productIds) {
+        for (Integer productId : productIds) {
+            GetProductResponse byId = productService.getById(productId);
+            Product product = mapper.map(byId, Product.class);
+            if (byId != null) {
+                sale.getProducts().add(product);
+            }
+        }
+    }
+
+    private void getPayment(CreateSaleRequest request, List<Integer> productIds) {
+        CreateProductPaymentRequest paymentRequest = new CreateProductPaymentRequest();
+        mapper.map(request.getPaymentRequest(), paymentRequest);
+        paymentRequest.setPrice(getTotalPrice(productIds));
+        paymentService.processProductPayment(paymentRequest);
+    }
+
+    public double getTotalPrice(List<Integer> productIds) {
+        double totalPrice = 0;
+        for (Integer productId : productIds) {
+            GetProductResponse byId = productService.getById(productId);
+            Product product = mapper.map(byId, Product.class);
+            double price = product.getPrice();
+            totalPrice += price;
+        }
+        return totalPrice;
+    }
+
     private void checkIfProductActive(CreateSaleRequest request) {
         List<Integer> productIds = request.getProductIds();
         for (Integer productId : productIds) {
@@ -92,15 +124,5 @@ public class SaleManager implements SaleService {
                 throw new BusinessException(Message.Product.PRODUCT_NOT_ACTIVE);
             }
         }
-    }
-
-    private double getTotalPrice(List<Integer> productIds){
-        double totalPrice = 0;
-        for (Integer productId : productIds) {
-            Product product = mapper.map(productId, Product.class);
-            double price = product.getPrice();
-            totalPrice+=price;
-        }
-        return totalPrice;
     }
 }

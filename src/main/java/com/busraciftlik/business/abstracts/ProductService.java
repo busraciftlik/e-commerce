@@ -23,4 +23,6 @@ public interface ProductService {
     void delete(int id);
 
     void changeStatus(int productId, Status status);
+
+    public void changeQuantity(int productId);
 }

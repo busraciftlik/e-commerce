@@ -32,5 +32,6 @@ public class Product {
     @JsonManagedReference
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Category> categories = new HashSet<>();
+
 }
 

@@ -6,6 +6,7 @@ import com.busraciftlik.business.dto.responses.create.CreateSaleResponse;
 import com.busraciftlik.business.dto.responses.get.GetAllSalesResponse;
 import com.busraciftlik.business.dto.responses.get.GetSaleResponse;
 import com.busraciftlik.business.dto.responses.update.UpdateSaleResponse;
+import com.busraciftlik.entities.Product;
 
 import java.util.List;
 

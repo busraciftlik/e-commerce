@@ -8,6 +8,7 @@ import com.busraciftlik.business.dto.responses.create.CreatePaymentResponse;
 import com.busraciftlik.business.dto.responses.get.GetAllPaymentsResponse;
 import com.busraciftlik.business.dto.responses.get.GetPaymentResponse;
 import com.busraciftlik.business.dto.responses.update.UpdatePaymentResponse;
+import com.busraciftlik.entities.Product;
 
 import java.util.List;
 
