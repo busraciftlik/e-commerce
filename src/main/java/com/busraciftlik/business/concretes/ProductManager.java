@@ -19,7 +19,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -51,18 +50,13 @@ public class ProductManager implements ProductService {
     public CreateProductResponse add(CreateProductRequest createProductRequest) {
         Product product = modelMapper.map(createProductRequest, Product.class);
         product.setId(0);
-        for (Integer categoryId : createProductRequest.getCategoryIds()) {
-            GetCategoryResponse byId = categoryService.getById(categoryId);
-            Category category = modelMapper.map(byId, Category.class);
-            if (byId != null) {
-                product.getCategories().add(category);
-            }
-        }
+        addCategory(createProductRequest, product);
         product.setStatus(Status.ACTIVE);
         rules.validateProduct(product);
         productRepository.save(product);
         return modelMapper.map(product, CreateProductResponse.class);
     }
+
 
     @Override
     public UpdateProductResponse update(int id, UpdateProductRequest updateProductRequest) {
@@ -88,15 +82,25 @@ public class ProductManager implements ProductService {
         productRepository.save(product);
     }
 
-    public void changeQuantity(int productId){
+    public void changeQuantity(int productId) {
         Product product = productRepository.findById(productId).orElseThrow();
-        if(!((product.getQuantity()) < 0)) {
+        if (!((product.getQuantity()) < 0)) {
             product.setQuantity(product.getQuantity() - 1);
         }
-        if(!((product.getQuantity())  == 0)) {
-            changeStatus(productId,Status.PASSIVE);
+        if (((product.getQuantity()) == 0)) {
+            changeStatus(productId, Status.PASSIVE);
         }
         productRepository.save(product);
+    }
+
+    private void addCategory(CreateProductRequest createProductRequest, Product product) {
+        for (Integer categoryId : createProductRequest.getCategoryIds()) {
+            GetCategoryResponse byId = categoryService.getById(categoryId);
+            Category category = modelMapper.map(byId, Category.class);
+            if (byId != null) {
+                product.getCategories().add(category);
+            }
+        }
     }
 
     private List<Product> filterProductsByPassiveStatus(boolean includePassive) {

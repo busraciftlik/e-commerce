@@ -2,8 +2,6 @@ package com.busraciftlik.business.concretes;
 
 import com.busraciftlik.business.abstracts.PaymentService;
 import com.busraciftlik.business.abstracts.PosService;
-import com.busraciftlik.business.abstracts.ProductService;
-import com.busraciftlik.business.abstracts.SaleService;
 import com.busraciftlik.business.dto.requests.CreateProductPaymentRequest;
 import com.busraciftlik.business.dto.requests.create.CreatePaymentRequest;
 import com.busraciftlik.business.dto.requests.update.UpdatePaymentRequest;
