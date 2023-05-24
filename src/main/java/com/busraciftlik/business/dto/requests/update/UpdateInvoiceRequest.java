@@ -8,4 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class UpdateInvoiceRequest {
+    private String cardHolder;
+    private String productName;
+    private double price;
 }
