@@ -84,7 +84,7 @@ public class ProductManager implements ProductService {
 
     public void changeQuantity(int productId) {
         Product product = productRepository.findById(productId).orElseThrow();
-        if (!((product.getQuantity()) < 0)) {
+        if (((product.getQuantity()) > 0)) {
             product.setQuantity(product.getQuantity() - 1);
         }
         if (((product.getQuantity()) == 0)) {

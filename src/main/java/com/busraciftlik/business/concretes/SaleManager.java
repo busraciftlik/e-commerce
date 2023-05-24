@@ -86,12 +86,11 @@ public class SaleManager implements SaleService {
         repository.deleteById(id);
 
     }
-
     private void addProduct(Sale sale, List<Integer> productIds) {
         for (Integer productId : productIds) {
             GetProductResponse byId = productService.getById(productId);
             Product product = mapper.map(byId, Product.class);
-            if (byId != null) {
+            if (byId != null ) {
                 sale.getProducts().add(product);
             }
         }
@@ -120,9 +119,9 @@ public class SaleManager implements SaleService {
         for (Integer productId : productIds) {
             GetProductResponse byId = productService.getById(productId);
             Product product = mapper.map(byId, Product.class);
-            if (!product.getStatus().equals(Status.ACTIVE)) {
-                throw new BusinessException(Message.Product.PRODUCT_NOT_ACTIVE);
-            }
+            rules.checkIfProductActive(product.getStatus());
+            rules.checkIfProductQuantity(product);
         }
     }
+
 }
