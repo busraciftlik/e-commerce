@@ -4,7 +4,7 @@ import com.busraciftlik.business.dto.requests.create.CreateInvoiceRequest;
 import com.busraciftlik.business.dto.responses.create.CreateInvoiceResponse;
 import com.busraciftlik.business.dto.responses.get.GetAllInvoicesResponse;
 import com.busraciftlik.business.dto.responses.get.GetInvoiceResponse;
-import com.busraciftlik.business.dto.responses.update.UpdateInvoiceRequest;
+import com.busraciftlik.business.dto.requests.update.UpdateInvoiceRequest;
 import com.busraciftlik.business.dto.responses.update.UpdateInvoiceResponse;
 
 import java.util.List;

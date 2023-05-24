@@ -1,4 +1,4 @@
-package com.busraciftlik.business.dto.responses.update;
+package com.busraciftlik.business.dto.requests.update;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

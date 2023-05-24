@@ -119,8 +119,8 @@ public class SaleManager implements SaleService {
         for (Integer productId : productIds) {
             GetProductResponse byId = productService.getById(productId);
             Product product = mapper.map(byId, Product.class);
-            rules.checkIfProductActive(product.getStatus());
             rules.checkIfProductQuantity(product);
+            rules.checkIfProductActive(product.getStatus());
         }
     }
 

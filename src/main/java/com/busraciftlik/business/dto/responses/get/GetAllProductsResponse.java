@@ -1,5 +1,6 @@
 package com.busraciftlik.business.dto.responses.get;
 
+import com.busraciftlik.business.dto.CategoryDto;
 import com.busraciftlik.entities.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,4 +23,5 @@ public class GetAllProductsResponse {
     private double price;
     private String description;
     private Status status;
+    private Set<CategoryDto> categories;
 }
